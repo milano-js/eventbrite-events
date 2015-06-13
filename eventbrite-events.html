@@ -1,0 +1,37 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<dom-module id="eventbrite-events">
+  <template>
+    <iron-ajax
+      auto
+      url="{{dataUrl}}"
+      handle-as="json"
+      last-response="{{eventbrite}}">
+    </iron-ajax>
+    <template is="dom-repeat" items="[[eventbrite.events]]">
+      <p class="event-date">[[_formatDate(item.start.local)]]</p>
+      <p class="event-description">[[_getEventTitle(item.description.text)]]</p>
+    </template>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'eventbrite-events',
+    properties: {
+      dataUrl: String
+    },
+    _formatDate: function(eventDate) {
+      var date = new Date(eventDate),
+          day = date.getDate(),
+          monthIndex = date.getMonth(),
+          year = date.getFullYear();
+
+      return day + '/' + (monthIndex+1) + '/' + year;
+    },
+    _getEventTitle: function(eventTitle) {
+      return eventTitle.split('---')[1];
+    }
+  });
+</script>
